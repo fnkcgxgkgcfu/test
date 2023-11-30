@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High-Resolution WebGL Animation</title>
+  <title>Colored WebGL Animation</title>
   <style>
     body { margin: 0; }
     canvas { display: block; }
@@ -15,22 +15,24 @@
     // Set up scene
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    
-    // Set higher antialiasing value (e.g., 8)
+
     const renderer = new THREE.WebGLRenderer({ antialias: true, antialiasingQuality: 8 });
 
-    // Set the pixel ratio for high-resolution rendering
     renderer.setPixelRatio(window.devicePixelRatio);
-
-    // Set the canvas size to match the pixel ratio
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     document.body.appendChild(renderer.domElement);
 
     // Create a sphere
     const geometry = new THREE.SphereGeometry(1, 32, 32);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
-    const sphere = new THREE.Mesh(geometry, material);
+    const materials = [];
+
+    // Create a different material for each face
+    for (let i = 0; i < geometry.faces.length; i++) {
+      materials.push(new THREE.MeshBasicMaterial({ color: new THREE.Color(Math.random(), Math.random(), Math.random()), side: THREE.DoubleSide }));
+    }
+
+    const sphere = new THREE.Mesh(geometry, materials);
     scene.add(sphere);
 
     // Set camera position
