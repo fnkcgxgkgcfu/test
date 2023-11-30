@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebGL Animation</title>
+  <title>Complex WebGL Animation</title>
   <style>
     body { margin: 0; }
     canvas { display: block; }
@@ -19,11 +19,30 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Create a cube
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+    // Create the main cube
+    const mainCubeGeometry = new THREE.BoxGeometry();
+    const mainCubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+    const mainCube = new THREE.Mesh(mainCubeGeometry, mainCubeMaterial);
+    scene.add(mainCube);
+
+    // Create smaller cubes inside the main cube
+    const numCubes = 5;
+    const cubeSize = 0.5;
+    const cubes = [];
+
+    for (let i = 0; i < numCubes; i++) {
+      const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+      const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+      const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+      // Randomly position each cube inside the main cube
+      cube.position.x = (Math.random() - 0.5) * 2 * (mainCubeGeometry.parameters.width - cubeSize);
+      cube.position.y = (Math.random() - 0.5) * 2 * (mainCubeGeometry.parameters.height - cubeSize);
+      cube.position.z = (Math.random() - 0.5) * 2 * (mainCubeGeometry.parameters.depth - cubeSize);
+
+      mainCube.add(cube);
+      cubes.push(cube);
+    }
 
     // Set camera position
     camera.position.z = 5;
@@ -32,9 +51,15 @@
     const animate = () => {
       requestAnimationFrame(animate);
 
-      // Rotate the cube
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
+      // Rotate the main cube
+      mainCube.rotation.x += 0.01;
+      mainCube.rotation.y += 0.01;
+
+      // Rotate the smaller cubes
+      cubes.forEach((cube) => {
+        cube.rotation.x += 0.02;
+        cube.rotation.y += 0.02;
+      });
 
       // Render the scene
       renderer.render(scene, camera);
