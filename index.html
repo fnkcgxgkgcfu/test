@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>High-Resolution WebGL Animation</title>
+  <title>Interactive WebGL Animation</title>
   <style>
     body { margin: 0; }
     canvas { display: block; }
@@ -34,13 +34,18 @@
     // Set camera position
     camera.position.z = 5;
 
+    // Variable to control rotation
+    let isRotating = true;
+
     // Animation function
     const animate = () => {
       requestAnimationFrame(animate);
 
-      // Rotate the sphere
-      sphere.rotation.x += 0.01;
-      sphere.rotation.y += 0.01;
+      if (isRotating) {
+        // Rotate the sphere
+        sphere.rotation.x += 0.01;
+        sphere.rotation.y += 0.01;
+      }
 
       // Render the scene
       renderer.render(scene, camera);
@@ -53,6 +58,11 @@
 
       // Update the canvas size to match the new pixel ratio
       renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Handle tap or click events to toggle rotation
+    document.addEventListener('click', () => {
+      isRotating = !isRotating;
     });
 
     // Start the animation
