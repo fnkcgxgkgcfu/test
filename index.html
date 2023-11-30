@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive WebGL Animation</title>
+  <title>High-Resolution WebGL Animation</title>
   <style>
     body { margin: 0; }
     canvas { display: block; }
@@ -15,7 +15,9 @@
     // Set up scene
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    
+    // Set higher antialiasing value (e.g., 8)
+    const renderer = new THREE.WebGLRenderer({ antialias: true, antialiasingQuality: 8 });
 
     // Set the pixel ratio for high-resolution rendering
     renderer.setPixelRatio(window.devicePixelRatio);
