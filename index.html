@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Complex WebGL Animation</title>
+  <title>High-Resolution WebGL Animation</title>
   <style>
     body { margin: 0; }
     canvas { display: block; }
@@ -15,34 +15,21 @@
     // Set up scene
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    
+    // Set the pixel ratio for high-resolution rendering
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Set the canvas size to match the pixel ratio
     renderer.setSize(window.innerWidth, window.innerHeight);
+    
     document.body.appendChild(renderer.domElement);
 
-    // Create the main cube
-    const mainCubeGeometry = new THREE.BoxGeometry();
-    const mainCubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
-    const mainCube = new THREE.Mesh(mainCubeGeometry, mainCubeMaterial);
-    scene.add(mainCube);
-
-    // Create smaller cubes inside the main cube
-    const numCubes = 100;
-    const cubeSize = 0.2;
-    const cubes = [];
-
-    for (let i = 0; i < numCubes; i++) {
-      const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-      const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
-      const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-
-      // Randomly position each cube inside the main cube
-      cube.position.x = (Math.random() - 0.5) * 2 * (mainCubeGeometry.parameters.width - cubeSize);
-      cube.position.y = (Math.random() - 0.5) * 2 * (mainCubeGeometry.parameters.height - cubeSize);
-      cube.position.z = (Math.random() - 0.5) * 2 * (mainCubeGeometry.parameters.depth - cubeSize);
-
-      mainCube.add(cube);
-      cubes.push(cube);
-    }
+    // Create a cube
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
 
     // Set camera position
     camera.position.z = 5;
@@ -51,15 +38,9 @@
     const animate = () => {
       requestAnimationFrame(animate);
 
-      // Rotate the main cube
-      mainCube.rotation.x += 0.01;
-      mainCube.rotation.y += 0.01;
-
-      // Rotate the smaller cubes
-      cubes.forEach((cube) => {
-        cube.rotation.x += 0.02;
-        cube.rotation.y += 0.02;
-      });
+      // Rotate the cube
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
 
       // Render the scene
       renderer.render(scene, camera);
@@ -69,6 +50,8 @@
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
+      
+      // Update the canvas size to match the new pixel ratio
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
