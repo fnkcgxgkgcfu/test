@@ -30,6 +30,7 @@
     // Create a different material for each face
     for (let i = 0; i < geometry.faces.length; i++) {
       materials.push(new THREE.MeshBasicMaterial({ color: new THREE.Color(Math.random(), Math.random(), Math.random()), side: THREE.DoubleSide }));
+      geometry.faces[i].materialIndex = i;
     }
 
     const sphere = new THREE.Mesh(geometry, materials);
